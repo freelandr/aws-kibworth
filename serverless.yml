@@ -1,0 +1,28 @@
+org: freelandr
+app: aws-kibworth
+service: aws-kibworth
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: python3.8
+  iam:
+    role:
+      statements:
+        # Allow functions to interact with RDS
+        - Effect: Allow
+          Action: 'rds:Describe*'
+          Resource: '*'
+functions:
+  stop_rds:
+    handler: src/stop_rds.lambda_handler
+    events:
+      - httpApi:
+          path: /stop_rds
+          method: get
+  restore_rds:
+    handler: src/restore_rds.lambda_handler
+    events:
+      - httpApi:
+          path: /restore_rds
+          method: get
