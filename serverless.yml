@@ -11,7 +11,9 @@ provider:
       statements:
         # Allow functions to interact with RDS
         - Effect: Allow
-          Action: 'rds:Describe*'
+          Action: 
+            - 'rds:Describe*'
+            - 'rds:RestoreDBInstanceFromDBSnapshot'
           Resource: '*'
 functions:
   stop_rds:
