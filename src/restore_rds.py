@@ -11,7 +11,7 @@ def lambda_handler(event, context):
         if snapshot['Status']=='available':
             availableSnapshots.append(snapshot['DBSnapshotIdentifier'])
     
-    latestSnapshot = sorted(id, reverse=True)[0]
+    latestSnapshot = sorted(availableSnapshots, reverse=True)[0]
     
     print(f'restoring snapshot {latestSnapshot}')
     
