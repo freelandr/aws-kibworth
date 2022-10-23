@@ -14,6 +14,6 @@ $ serverless deploy
 ```bash
 export PASSWD=[insert password here]
 export ENDPOINT=[insert endpoint here]
-curl -i -H 'Content-Type: application/json' -X POST -d '{"password": "$PASSWD"}' https://$ENDPOINT/stop_rds
-curl -i -H 'Content-Type: application/json' -X POST -d '{"password": "$PASSWD"}' https:/$ENDPOINT/restore_rds
+curl -i -H 'Content-Type: application/json' -X POST -d '{"password": '\"$PASSWD\"'}' https://$ENDPOINT/stop_rds
+curl -i -H 'Content-Type: application/json' -X POST -d '{"password": '\"$PASSWD\"'}' https://$ENDPOINT/restore_rds
 ```

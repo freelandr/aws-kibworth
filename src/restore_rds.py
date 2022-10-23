@@ -29,7 +29,7 @@ def lambda_handler(event, context):
             }
         except rds.exceptions.DBInstanceNotFoundFault:
             rds_response = restore_latest_snapshot()
-            update_security_group(event['x-forwarded-for'])
+            update_security_group(event['headers']['x-forwarded-for'])
             response_code = 200
             response_body = {
                 "message": "restore_rds: complete",
