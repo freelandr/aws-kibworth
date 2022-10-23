@@ -14,6 +14,10 @@ provider:
           Action: 
             - 'rds:Describe*'
             - 'rds:RestoreDBInstanceFromDBSnapshot'
+            - 'rds:CreateDBSnapshot'
+            - 'rds:DeleteDBSnapshot'
+            - 'rds:DeleteDBInstance'
+            - 'secretsmanager:GetSecretValue'
           Resource: '*'
 functions:
   stop_rds:
@@ -21,10 +25,10 @@ functions:
     events:
       - httpApi:
           path: /stop_rds
-          method: get
+          method: post
   restore_rds:
     handler: src/restore_rds.lambda_handler
     events:
       - httpApi:
           path: /restore_rds
-          method: get
+          method: post
