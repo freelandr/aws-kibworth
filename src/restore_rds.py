@@ -55,7 +55,8 @@ def restore_latest_snapshot():
     
     return rds.restore_db_instance_from_db_snapshot(
         DBInstanceIdentifier='kibworth',
-        DBSnapshotIdentifier=latestSnapshot['DBSnapshotIdentifier']
+        DBSnapshotIdentifier=latestSnapshot['DBSnapshotIdentifier'],
+        VPCSecurityGroupIds=['sg-0761fd1f6b2cb391b']
     )
     
 def update_security_group(sourceIP: str):
