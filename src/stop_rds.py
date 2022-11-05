@@ -62,18 +62,10 @@ def update_security_group():
     )    
     group_id = response['SecurityGroups'][0]['GroupId']
     
-    print(f"security group: {response['SecurityGroups'][0]}")
+    print(f"update_security_group: found security group: {response['SecurityGroups'][0]}")
     
     for rule in response['SecurityGroups'][0]['IpPermissions']:
         if 'Client' in rule['IpRanges'][0]['Description']:
             print(f'update_security_group: deleting inbound rule: {rule}')   
-            ec2_client.revoke_security_group_ingress(GroupId=group_id, IpPermissions=rule)
-    
-    #security_group = ec2_client.SecurityGroup(group_id)
-
-    
-    #for inbound_rule in security_group.ip_permssions:
-    #    if 'Client' in inbound_rule['GroupName']:
-    #        print(f'update_security_group: deleting inbound rule: {inbound_rule}')               
-    #        security_group.revoke_ingress(GroupName=inbound_rule['GroupName'])
+            ec2_client.revoke_security_group_ingress(GroupId=group_id, IpPermissions=[rule])
     

@@ -76,14 +76,14 @@ def update_security_group(sourceIP: str):
     print(f'update_security_group: allowing traffic from {sourceIP}')
     
     ec2_client.authorize_security_group_ingress( 
-    GroupId=group_id, 
-    IpPermissions=[
-        {
-            'IpProtocol': 'tcp', 
-            'FromPort': 5432,
-            'ToPort': 5432, 
-            'IpRanges': [{ 'CidrIp': f'{sourceIP}/32', 'Description': f'Client-{sourceIP}' }],
-            'UserIdGroupPairs': [{ 'GroupId': group_id }] 
-        }
-    ],
+        GroupId=group_id, 
+        IpPermissions=[
+            {
+                'IpProtocol': 'tcp', 
+                'FromPort': 5432,
+                'ToPort': 5432, 
+                'IpRanges': [{ 'CidrIp': f'{sourceIP}/32', 'Description': f'Client-{sourceIP}' }],
+                'UserIdGroupPairs': [{ 'GroupId': group_id }] 
+            }
+        ],
     )
