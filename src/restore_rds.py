@@ -56,7 +56,7 @@ def restore_latest_snapshot():
     return rds.restore_db_instance_from_db_snapshot(
         DBInstanceIdentifier='kibworth',
         DBSnapshotIdentifier=latestSnapshot['DBSnapshotIdentifier'],
-        VPCSecurityGroupIds=['sg-0761fd1f6b2cb391b']
+        VpcSecurityGroupIds=['sg-0761fd1f6b2cb391b']
     )
     
 def update_security_group(sourceIP: str):
@@ -83,8 +83,7 @@ def update_security_group(sourceIP: str):
                 'IpProtocol': 'tcp', 
                 'FromPort': 5432,
                 'ToPort': 5432, 
-                'IpRanges': [{ 'CidrIp': f'{sourceIP}/32', 'Description': f'Client-{sourceIP}' }],
-                'UserIdGroupPairs': [{ 'GroupId': group_id }] 
+                'IpRanges': [{ 'CidrIp': f'{sourceIP}/32', 'Description': f'Client-{sourceIP}' }]
             }
         ],
     )
