@@ -66,13 +66,24 @@ def update_security_group(sourceIP: str):
         ]
     )    
     group_id = response['SecurityGroups'][0]['GroupId']
-    security_group = ec2_client.security_group(group_id)
+    print(f"update_security_group: found security group: {response['SecurityGroups'][0]}")
 
-    for inbound_rule in security_group.ip_permssions:
-        if sourceIP in inbound_rule['IpRanges']:
+    for rule in response['SecurityGroups'][0]['IpPermissions']:
+        if sourceIP in rule['IpRanges'][0]['CidrIp']:
             print(f'update_security_group: traffic already allowed from {sourceIP}')
             return
     
     print(f'update_security_group: allowing traffic from {sourceIP}')
-    security_group.authorize_ingress(IpProtocol="tcp",CidrIp=f'{sourceIP}/32',ToPort=5432)
-    '''revoke old rules?'''
+    
+    ec2_client.authorize_security_group_ingress( 
+    GroupId=group_id, 
+    IpPermissions=[
+        {
+            'IpProtocol': 'tcp', 
+            'FromPort': 5432,
+            'ToPort': 5432, 
+            'IpRanges': [{ 'CidrIp': f'{sourceIP}/32', 'Description': f'Client-{sourceIP}' }],
+            'UserIdGroupPairs': [{ 'GroupId': group_id }] 
+        }
+    ],
+    )

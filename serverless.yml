@@ -18,16 +18,23 @@ provider:
             - 'rds:DeleteDBSnapshot'
             - 'rds:DeleteDBInstance'
             - 'secretsmanager:GetSecretValue'
+            - 'ec2:DescribeSecurityGroups'
+            - 'ec2:DescribeSecurityGroupRules'
+            - 'ec2:ModifySecurityGroupRules'
+            - 'ec2:AuthorizeSecurityGroupIngress'
+            - 'ec2:RevokeSecurityGroupIngress'
           Resource: '*'
 functions:
   stop_rds:
     handler: src/stop_rds.lambda_handler
+    timeout: 60
     events:
       - httpApi:
           path: /stop_rds
           method: post
   restore_rds:
     handler: src/restore_rds.lambda_handler
+    timeout: 60
     events:
       - httpApi:
           path: /restore_rds

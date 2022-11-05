@@ -33,10 +33,11 @@ def lambda_handler(event, context):
             
             print(f'stop_rds: deleting database and creating final snapshot: {snapshot_name}')
             rds_response = rds.delete_db_instance(DBInstanceIdentifier='kibworth', FinalDBSnapshotIdentifier=snapshot_name, DeleteAutomatedBackups=True)
+            update_security_group()
             
             response_code = 200
             response_body = {
-                "message": "stop_rds: database stopped",
+                "message": "stop_rds: database shutting down",
                 "RDS response": rds_response
             }
         except rds.exceptions.DBInstanceNotFoundFault:
@@ -51,3 +52,28 @@ def lambda_handler(event, context):
     print(f'stop_rds: END - returning response: {response}')
 
     return response
+    
+def update_security_group():
+    ec2_client = boto3.client('ec2')
+    response = ec2_client.describe_security_groups(
+        Filters=[
+            dict(Name='group-name', Values=['kibworth-db-sg'])
+        ]
+    )    
+    group_id = response['SecurityGroups'][0]['GroupId']
+    
+    print(f"security group: {response['SecurityGroups'][0]}")
+    
+    for rule in response['SecurityGroups'][0]['IpPermissions']:
+        if 'Client' in rule['IpRanges'][0]['Description']:
+            print(f'update_security_group: deleting inbound rule: {rule}')   
+            ec2_client.revoke_security_group_ingress(GroupId=group_id, IpPermissions=rule)
+    
+    #security_group = ec2_client.SecurityGroup(group_id)
+
+    
+    #for inbound_rule in security_group.ip_permssions:
+    #    if 'Client' in inbound_rule['GroupName']:
+    #        print(f'update_security_group: deleting inbound rule: {inbound_rule}')               
+    #        security_group.revoke_ingress(GroupName=inbound_rule['GroupName'])
+    
